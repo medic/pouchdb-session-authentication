@@ -33,9 +33,9 @@ const parseCookie = (response) => {
   };
 };
 
-const getExistingSession = (db) => {
+const getExistingSession = async (db) => {
   const urlString = getSessionKey(db);
-  if (sessions[urlString] && !isExpired(sessions[urlString])) {
+  if (sessions[urlString] && !isExpired(await sessions[urlString])) {
     return sessions[urlString];
   }
 };
@@ -60,14 +60,15 @@ const authenticate = async (db) => {
 
   const body = JSON.stringify({ name: db.credentials.username, password: db.credentials.password});
   const response = await db.originalFetch(url.toString(), { method: 'POST', headers, body });
-  updateSession(db, response);
+  return updateSession(db, response);
 };
 
 const updateSession = (db, response) => {
   const session = parseCookie(response);
   if (session) {
-    const url = getSessionKey(db);
-    sessions[url] = session;
+    const sessionKey = getSessionKey(db);
+    sessions[sessionKey] = Promise.resolve(session);
+    return session;
   }
 };
 
@@ -76,8 +77,18 @@ const invalidateSession = db => {
   delete sessions[url];
 };
 
+const getSession = async (db) => {
+  const session = await getExistingSession(db);
+
+  if (session) {
+    return session;
+  }
+
+  return await authenticate(db);
+};
+
 const isExpired = (session) => {
-  return Date.now() > session.expires;
+  return Date.now() > session?.expires;
 };
 
 const extractAuth = (opts) => {
@@ -108,11 +119,7 @@ function wrapAdapter (PouchDB, HttpPouch) {
 
     db.originalFetch = db.fetch || PouchDB.fetch;
     db.fetch = async (url, opts = {}) => {
-      let session = getExistingSession(db);
-      if (!session) {
-        await authenticate(db);
-        session = getExistingSession(db);
-      }
+      const session = await getSession(db);
 
       if (session) {
         opts.headers = opts.headers || new Headers();
