@@ -82,10 +82,6 @@ const getSession = async (db) => {
   return sessions[sessionKey];
 };
 
-const isExpired = (session) => {
-  return Date.now() > session?.expires;
-};
-
 const extractAuth = (opts) => {
   if (opts.auth) {
     opts.credentials = opts.auth;
@@ -103,11 +99,12 @@ const extractAuth = (opts) => {
 };
 
 const validateSession = (db, session) => {
-  if (!session) {
+  if (!session || !session.expires) {
     return;
   }
 
-  if (isExpired(session)) {
+  const isExpired =  Date.now() > session.expires;
+  if (isExpired) {
     invalidateSession(db);
     return getSession(db);
   }
