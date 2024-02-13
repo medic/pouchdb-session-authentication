@@ -60,7 +60,7 @@ const updateSession = (db, response) => {
   const session = parseCookie(response);
   if (session) {
     const sessionKey = getSessionKey(db);
-    sessions[sessionKey] = Promise.resolve(session);
+    sessions[sessionKey] = session;
     return session;
   }
 };
