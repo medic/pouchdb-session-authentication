@@ -289,6 +289,55 @@ describe('Pouchdb Session authentication plugin', () => {
         { headers: new Headers({ 'Cookie': 'AuthSession=user2session' }) }
       ]);
     });
+
+    it('should only request session once for concurrent requests', async () => {
+      db = { name: 'http://admin:pass@localhost:5984/mydb' };
+      plugin(PoudhDb);
+      PoudhDb.adapters.http(db);
+
+      fetch.resolves({ ok: true, status: 200 });
+      fetch.withArgs('http://admin:pass@localhost:5984/_session').resolves({
+        ok: true,
+        status: 200,
+        headers: new Headers({ 'set-cookie': getSession('theonetruesession') })
+      });
+
+      await Promise.all([
+        db.fetch('randomUrl1'),
+        db.fetch('randomUrl2'),
+        db.fetch('randomUrl3'),
+        db.fetch('randomUrl4'),
+      ]);
+
+      expect(fetch.callCount).to.equal(5);
+      expect(fetch.args[0]).to.deep.equal([
+        'http://admin:pass@localhost:5984/_session',
+        {
+          method: 'POST',
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          }),
+          body: JSON.stringify({ name: 'admin', password: 'pass' }),
+        }
+      ]);
+      expect(fetch.args[1]).to.deep.equal([
+        'randomUrl1',
+        { headers: new Headers({ 'Cookie': 'AuthSession=theonetruesession' }) }
+      ]);
+      expect(fetch.args[2]).to.deep.equal([
+        'randomUrl2',
+        { headers: new Headers({ 'Cookie': 'AuthSession=theonetruesession' }) }
+      ]);
+      expect(fetch.args[3]).to.deep.equal([
+        'randomUrl3',
+        { headers: new Headers({ 'Cookie': 'AuthSession=theonetruesession' }) }
+      ]);
+      expect(fetch.args[4]).to.deep.equal([
+        'randomUrl4',
+        { headers: new Headers({ 'Cookie': 'AuthSession=theonetruesession' }) }
+      ]);
+    });
     
     it('should update the session if server responds with new cookie', async () => {
       db = { name: 'http://admin:pass@localhost:5984/mydb' };

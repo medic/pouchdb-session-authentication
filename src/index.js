@@ -33,13 +33,6 @@ const parseCookie = (response) => {
   };
 };
 
-const getExistingSession = async (db) => {
-  const urlString = getSessionKey(db);
-  if (sessions[urlString] && !isExpired(await sessions[urlString])) {
-    return sessions[urlString];
-  }
-};
-
 const getSessionKey = (db) => {
   const sessionUrl = getSessionUrl(db);
   return `${db.credentials.username}:${db.credentials.password}:${sessionUrl}`;
@@ -73,18 +66,20 @@ const updateSession = (db, response) => {
 };
 
 const invalidateSession = db => {
-  const url = getSessionKey(db);
-  delete sessions[url];
+  const sessionKey = getSessionKey(db);
+  delete sessions[sessionKey];
 };
 
 const getSession = async (db) => {
-  const session = await getExistingSession(db);
+  const sessionKey = getSessionKey(db);
+  const session = sessions[sessionKey];
 
   if (session) {
     return session;
   }
 
-  return await authenticate(db);
+  sessions[sessionKey] = authenticate(db);
+  return sessions[sessionKey];
 };
 
 const isExpired = (session) => {
@@ -107,6 +102,19 @@ const extractAuth = (opts) => {
   };
 };
 
+const validateSession = (db, session) => {
+  if (!session) {
+    return;
+  }
+
+  if (isExpired(session)) {
+    invalidateSession(db);
+    return getSession(db);
+  }
+
+  return session;
+};
+
 // eslint-disable-next-line func-style
 function wrapAdapter (PouchDB, HttpPouch) {
   // eslint-disable-next-line func-style
@@ -119,7 +127,7 @@ function wrapAdapter (PouchDB, HttpPouch) {
 
     db.originalFetch = db.fetch || PouchDB.fetch;
     db.fetch = async (url, opts = {}) => {
-      const session = await getSession(db);
+      const session = await validateSession(db, await getSession(db));
 
       if (session) {
         opts.headers = opts.headers || new Headers();

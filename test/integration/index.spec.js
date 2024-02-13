@@ -147,9 +147,10 @@ describe(`integration with ${authType}`, function () {
   it('should only request session once for concurrent requests', async () => {
     const auth = { username: tempAdminName, password: 'new_password' };
     await utils.createAdmin(auth.username, auth.password);
+    await utils.createDb(tempDbName);
 
+    tempDb = getDb(tempDbName, auth, authType);
     const collectLogs = await utils.getDockerContainerLogs();
-    tempDb = getDb(tempDbName, auth, authType, false);
     await Promise.all([
       tempDb.allDocs(),
       tempDb.allDocs(),
