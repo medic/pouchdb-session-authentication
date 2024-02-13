@@ -70,18 +70,6 @@ const invalidateSession = db => {
   delete sessions[sessionKey];
 };
 
-const getSession = async (db) => {
-  const sessionKey = getSessionKey(db);
-  const session = sessions[sessionKey];
-
-  if (session) {
-    return session;
-  }
-
-  sessions[sessionKey] = authenticate(db);
-  return sessions[sessionKey];
-};
-
 const extractAuth = (opts) => {
   if (opts.auth) {
     opts.credentials = opts.auth;
@@ -98,18 +86,26 @@ const extractAuth = (opts) => {
   };
 };
 
-const validateSession = (db, session) => {
+const isValid = (session) => {
   if (!session || !session.expires) {
-    return;
+    return false;
   }
-
   const isExpired =  Date.now() > session.expires;
-  if (isExpired) {
-    invalidateSession(db);
-    return getSession(db);
+  return !isExpired;
+};
+
+const getValidSession = async (db) => {
+  const sessionKey = getSessionKey(db);
+
+  if (sessions[sessionKey]) {
+    const session = await sessions[sessionKey];
+    if (isValid(session)) {
+      return session;
+    }
   }
 
-  return session;
+  sessions[sessionKey] = authenticate(db);
+  return sessions[sessionKey];
 };
 
 // eslint-disable-next-line func-style
@@ -124,7 +120,7 @@ function wrapAdapter (PouchDB, HttpPouch) {
 
     db.originalFetch = db.fetch || PouchDB.fetch;
     db.fetch = async (url, opts = {}) => {
-      const session = await validateSession(db, await getSession(db));
+      const session = await getValidSession(db);
 
       if (session) {
         opts.headers = opts.headers || new Headers();

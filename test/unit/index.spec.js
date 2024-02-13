@@ -304,9 +304,9 @@ describe('Pouchdb Session authentication plugin', () => {
 
       await Promise.all([
         db.fetch('randomUrl1'),
-        db.fetch('randomUrl2'),
-        db.fetch('randomUrl3'),
-        db.fetch('randomUrl4'),
+        db.fetch('randomUrl1'),
+        db.fetch('randomUrl1'),
+        db.fetch('randomUrl1'),
       ]);
 
       expect(fetch.callCount).to.equal(5);
@@ -326,15 +326,15 @@ describe('Pouchdb Session authentication plugin', () => {
         { headers: new Headers({ 'Cookie': 'AuthSession=theonetruesession' }) }
       ]);
       expect(fetch.args[2]).to.deep.equal([
-        'randomUrl2',
+        'randomUrl1',
         { headers: new Headers({ 'Cookie': 'AuthSession=theonetruesession' }) }
       ]);
       expect(fetch.args[3]).to.deep.equal([
-        'randomUrl3',
+        'randomUrl1',
         { headers: new Headers({ 'Cookie': 'AuthSession=theonetruesession' }) }
       ]);
       expect(fetch.args[4]).to.deep.equal([
-        'randomUrl4',
+        'randomUrl1',
         { headers: new Headers({ 'Cookie': 'AuthSession=theonetruesession' }) }
       ]);
     });
@@ -526,6 +526,23 @@ describe('Pouchdb Session authentication plugin', () => {
         }
       ]);
       expect(fetch.args[1]).to.deep.equal([ 'randomUrl', {} ]);
+
+      const response2 = await db.fetch('randomUrl');
+
+      expect(response2).to.deep.equal({ ok: false, status: 401, body: 'omg' });
+      expect(fetch.callCount).to.equal(4);
+      expect(fetch.args[2]).to.deep.equal([
+        'http://localhost:5984/_session',
+        {
+          method: 'POST',
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          }),
+          body: JSON.stringify({ name: 'admin', password: 'pass' }),
+        }
+      ]);
+      expect(fetch.args[3]).to.deep.equal([ 'randomUrl', {} ]);
     });
 
     it('should continue when session cookie is not returned', async () => {
