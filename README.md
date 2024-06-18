@@ -4,14 +4,14 @@ Enables session cookie authentication for `pouchdb-adapter-http`.
 
 ### Installation
 ```bash
-npm install pouchdb-adapter-http-session
+npm install pouchdb-session-authentication
 ```
 
 ### Usage
 ```javascript
 const PouchDb = require('pouchdb-core');
 PouchDb.plugin(require('pouchdb-adapter-http'));
-PouchDb.plugin(require('pouchdb-adapter-http-session'));
+PouchDb.plugin(require('pouchdb-session-authentication'));
 
 const myDb = new PouchDB('http://admin:pass@mysite:5984/mydb');
 const myOtherDb = new PouchDB(
