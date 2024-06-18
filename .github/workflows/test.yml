@@ -43,5 +43,5 @@ jobs:
         with:
           node-version: ${{ matrix.version }}
       - run: echo $(docker-compose -v)
-      - run: npm ci
+      - run: npm install --production
       - run: npm run integration-basic
