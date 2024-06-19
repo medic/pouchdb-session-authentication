@@ -1,6 +1,6 @@
 {
   "name": "pouchdb-session-authentication",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Plugin that forces session authentication for PouchDb http adapter",
   "main": "src/index.js",
   "scripts": {
@@ -12,10 +12,11 @@
     "integration-auth": "npm run stop-couch && npm run start-couch && mocha ./test/integration/credentials*.spec.js && npm run stop-couch",
     "integration-url": "npm run stop-couch && npm run start-couch && AUTH_TYPE=url mocha ./test/integration/credentials*.spec.js && npm run stop-couch",
     "integration-session": "npm run stop-couch && npm run start-couch && mocha ./test/integration/session*.spec.js && npm run stop-couch",
-    "integration": "npm run integration-auth && npm run integration-url && npm run integration-session"
+    "integration": "npm run integration-auth && npm run integration-url && npm run integration-session",
+    "integration-basic": "npm run stop-couch && npm run start-couch && node ./test/integration/basic.spec.js"
   },
   "engines": {
-    "node": ">=16.12.0",
+    "node": ">=8.10.0",
     "npm": ">=8.3.1"
   },
   "author": "Diana Barsan",

@@ -1,4 +1,5 @@
-const util = require('node:util');
+const util = require('util');
+const { URL } = require('url');
 const { Headers } = require('pouchdb-fetch');
 
 const sessionCookieName = 'AuthSession';
@@ -6,7 +7,7 @@ const cookieRegex = new RegExp(`${sessionCookieName}=(.*)`);
 const sessions = {};
 
 const parseCookie = (response) => {
-  const cookie = response?.headers?.get('set-cookie');
+  const cookie = response && response.headers && response.headers.get('set-cookie');
   if (!cookie) {
     return;
   }
@@ -35,7 +36,9 @@ const parseCookie = (response) => {
 
 const getSessionKey = (db) => {
   const sessionUrl = getSessionUrl(db);
-  return `${db.credentials?.username}:${db.credentials?.password}:${db.session}:${sessionUrl}`;
+  const username = db.credentials && db.credentials.username;
+  const password = db.credentials && db.credentials.password;
+  return `${username}:${password}:${db.session}:${sessionUrl}`;
 };
 
 const getSessionUrl = (db) => {
@@ -45,7 +48,7 @@ const getSessionUrl = (db) => {
 };
 
 const authenticate = async (db) => {
-  if (!db?.credentials?.username) {
+  if (!db || !db.credentials || !db.credentials.username) {
     return;
   }
 
@@ -101,7 +104,7 @@ const extractAuth = (opts) => {
 };
 
 const isValid = (session) => {
-  if (!session?.expires) {
+  if (!session || !session.expires) {
     return false;
   }
   const isExpired =  Date.now() > session.expires;

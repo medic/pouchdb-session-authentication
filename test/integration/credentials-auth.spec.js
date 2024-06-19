@@ -1,4 +1,5 @@
 require('chai').use(require('chai-as-promised'));
+const { URL } = require('url');
 const PouchDb = require('pouchdb-core');
 PouchDb.plugin(require('pouchdb-adapter-http'));
 PouchDb.plugin(require('../../src/index'));

@@ -2,3 +2,4 @@ test
 .idea
 .github
 /.eslintrc
+.nyc_output/

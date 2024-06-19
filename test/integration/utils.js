@@ -138,7 +138,7 @@ const getDbRequest = (username, logs, dbName, path, success = true, method = 'GE
 
 const request = async (opts) => {
   const authString = `${auth.username}:${auth.password}`;
-  const token = btoa(decodeURIComponent(encodeURIComponent(authString)));
+  const token = Buffer.from(decodeURIComponent(encodeURIComponent(authString))).toString('base64');
 
   const headers = new Headers({ 'Authorization': 'Basic ' + token });
   if (opts.json) {
