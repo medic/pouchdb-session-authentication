@@ -143,6 +143,7 @@ describe('Pouchdb Session authentication plugin', () => {
           headers: new Headers({
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Authorization': 'Basic YWRtaW46cGFzcw==',
           }),
           body: JSON.stringify({ name: 'admin', password: 'pass' }),
         }
@@ -175,6 +176,7 @@ describe('Pouchdb Session authentication plugin', () => {
           headers: new Headers({
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Authorization': 'Basic YWRtaW46cGFzcw==',
           }),
           body: JSON.stringify({ name: 'admin', password: 'pass' }),
         }
@@ -213,6 +215,7 @@ describe('Pouchdb Session authentication plugin', () => {
           headers: new Headers({
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Authorization': 'Basic YWRtaW46cGFzcw==',
           }),
           body: JSON.stringify({ name: 'admin', password: 'pass' }),
         }
@@ -261,6 +264,7 @@ describe('Pouchdb Session authentication plugin', () => {
           headers: new Headers({
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Authorization': 'Basic dXNyMTpwYXNz',
           }),
           body: JSON.stringify({ name: 'usr1', password: 'pass' }),
         }
@@ -276,6 +280,7 @@ describe('Pouchdb Session authentication plugin', () => {
           headers: new Headers({
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Authorization': 'Basic dXNyMjpwYXNz',
           }),
           body: JSON.stringify({ name: 'usr2', password: 'pass' }),
         }
@@ -365,6 +370,7 @@ describe('Pouchdb Session authentication plugin', () => {
           headers: new Headers({
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Authorization': 'Basic YWRtaW46cGFzcw==',
           }),
           body: JSON.stringify({ name: 'admin', password: 'pass' }),
         }
@@ -408,6 +414,7 @@ describe('Pouchdb Session authentication plugin', () => {
           headers: new Headers({
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Authorization': 'Basic YWRtaW46cGFzcw==',
           }),
           body: JSON.stringify({ name: 'admin', password: 'pass' }),
         }
@@ -461,6 +468,7 @@ describe('Pouchdb Session authentication plugin', () => {
           headers: new Headers({
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Authorization': 'Basic dXNyOnBhc3M=',
           }),
           body: JSON.stringify({ name: 'usr', password: 'pass' }),
         }
@@ -484,6 +492,7 @@ describe('Pouchdb Session authentication plugin', () => {
           headers: new Headers({
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Authorization': 'Basic dXNyOnBhc3M=',
           }),
           body: JSON.stringify({ name: 'usr', password: 'pass' }),
         }
@@ -525,6 +534,7 @@ describe('Pouchdb Session authentication plugin', () => {
           headers: new Headers({
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Authorization': 'Basic dXNyOnBhc3M=',
           }),
           body: JSON.stringify({ name: 'usr', password: 'pass' }),
         }
@@ -541,6 +551,7 @@ describe('Pouchdb Session authentication plugin', () => {
           headers: new Headers({
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Authorization': 'Basic dXNyOnBhc3M=',
           }),
           body: JSON.stringify({ name: 'usr', password: 'pass' }),
         }
@@ -569,6 +580,7 @@ describe('Pouchdb Session authentication plugin', () => {
           headers: new Headers({
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Authorization': 'Basic YWRtaW46cGFzcw==',
           }),
           body: JSON.stringify({ name: 'admin', password: 'pass' }),
         }
@@ -586,6 +598,7 @@ describe('Pouchdb Session authentication plugin', () => {
           headers: new Headers({
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Authorization': 'Basic YWRtaW46cGFzcw==',
           }),
           body: JSON.stringify({ name: 'admin', password: 'pass' }),
         }
@@ -634,6 +647,7 @@ describe('Pouchdb Session authentication plugin', () => {
           headers: new Headers({
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Authorization': 'Basic YWRtaW46cGFzcw==',
           }),
           body: JSON.stringify({ name: 'admin', password: 'pass' }),
         }
@@ -662,6 +676,7 @@ describe('Pouchdb Session authentication plugin', () => {
           headers: new Headers({
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Authorization': 'Basic YWRtaW46cGFzcw==',
           }),
           body: JSON.stringify({ name: 'admin', password: 'pass' }),
         }
