@@ -91,8 +91,6 @@ describe(`integration with ${authType}`, async function () {
 
     const logs = await collectLogs(100);
 
-    console.log(logs);
-
     expect(utils.getDbRequest(auth.username, logs, tempDbName, '/_all_docs').length).to.equal(1);
     expect(utils.getSessionRequests(logs).length).to.equal(1);
     expect(utils.getCookieAuthRequests(auth.username, logs).length).to.equal(1);
@@ -110,8 +108,6 @@ describe(`integration with ${authType}`, async function () {
     await utils.createAdmin(auth.username, 'password change');
     await expect(tempDb.allDocs()).to.eventually.be.rejectedWith(wrongAuthError);
     const logs = await collectLogs();
-
-    console.log(logs);
 
     expect(utils.getSessionRequests(logs, false).length).to.equal(1);
     expect(utils.getDbRequest('undefined', logs, tempDbName, '/_all_docs', false).length).to.equal(2);
