@@ -169,7 +169,10 @@ const setConfig = async (section, config, value, remove = false) => {
 };
 
 const setIterations = (iterations) => setConfig('chttpd_auth', 'iterations', iterations);
-const setAuthTimeout = (timeout) => setConfig('chttpd_auth', 'timeout', timeout);
+const setAuthTimeout = async (timeout) => {
+  await setConfig('chttpd_auth', 'timeout', timeout); // couch3
+  await setConfig('couch_httpd_auth', 'timeout', timeout); // couch2
+};
 
 const waitForCouchdb = async () => {
   // eslint-disable-next-line no-constant-condition

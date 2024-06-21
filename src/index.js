@@ -57,6 +57,9 @@ const authenticate = async (db) => {
   const headers = new Headers();
   headers.set('Content-Type', 'application/json');
   headers.set('Accept', 'application/json');
+  const authString = `${db.credentials.username}:${db.credentials.password}`;
+  const token = Buffer.from(decodeURIComponent(encodeURIComponent(authString))).toString('base64');
+  headers.set('Authorization', `Basic ${token}`);
 
   const body = JSON.stringify({ name: db.credentials.username, password: db.credentials.password});
   const response = await db.originalFetch(url.toString(), { method: 'POST', headers, body });
