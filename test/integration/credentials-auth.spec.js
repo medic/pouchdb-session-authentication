@@ -87,7 +87,6 @@ describe(`integration with ${authType}`, async function () {
     tempDb = getDb(tempDbName, auth, authType);
 
     const collectLogs = await utils.getDockerContainerLogs();
-    await db.allDocs();
     await tempDb.allDocs();
 
     const logs = await collectLogs(100);
