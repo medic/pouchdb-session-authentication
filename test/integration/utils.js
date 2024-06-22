@@ -20,9 +20,9 @@ const killSpawnedProcess = (proc) => {
 };
 
 const waitForDockerContainerLogs = (...regex) => {
-  const params = 'logs --follow --tail=1 couchdb';
+  const params = 'compose logs --follow --tail=1 couchdb';
   const proc = spawn(
-    'docker-compose',
+    'docker',
     params.split(' '),
     {
       stdio: ['ignore', 'pipe', 'pipe'],
@@ -64,9 +64,9 @@ const waitForDockerContainerLogs = (...regex) => {
 };
 
 const getDockerContainerLogs = (...regex) => {
-  const params = 'logs --follow --tail=1 couchdb';
+  const params = 'compose logs --follow --tail=1 couchdb';
   const proc = spawn(
-    'docker-compose',
+    'docker',
     params.split(' '),
     {
       stdio: ['ignore', 'pipe', 'pipe'],
@@ -169,7 +169,10 @@ const setConfig = async (section, config, value, remove = false) => {
 };
 
 const setIterations = (iterations) => setConfig('chttpd_auth', 'iterations', iterations);
-const setAuthTimeout = (timeout) => setConfig('chttpd_auth', 'timeout', timeout);
+const setAuthTimeout = async (timeout) => {
+  await setConfig('chttpd_auth', 'timeout', timeout); // couch3
+  await setConfig('couch_httpd_auth', 'timeout', timeout); // couch2
+};
 
 const waitForCouchdb = async () => {
   // eslint-disable-next-line no-constant-condition

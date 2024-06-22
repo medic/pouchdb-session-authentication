@@ -16,8 +16,15 @@ jobs:
       - run: npm run test
 
   integration:
+    strategy:
+      fail-fast: false
+      matrix:
+        couchdb-image: [ 'public.ecr.aws/medic/cht-couchdb:4.3.0', 'couchdb:3.3.3' ]
+
     name: Integration
     runs-on: ubuntu-22.04
+    env:
+      COUCHDB_IMAGE: ${{ matrix.couchdb-image }}
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js 20.x
@@ -36,6 +43,8 @@ jobs:
 
     name: Smoke test for older node versions
     runs-on: ubuntu-22.04
+    env:
+      COUCHDB_IMAGE: 'couchdb:3.3.3'
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.version }}
